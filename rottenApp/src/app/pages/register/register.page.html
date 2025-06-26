@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Registro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-input [(ngModel)]="username" placeholder="Nombre de usuario"></ion-input>
+  <ion-input [(ngModel)]="email" placeholder="Correo electrónico" type="email"></ion-input>
+  <ion-input [(ngModel)]="password" type="password" placeholder="Contraseña"></ion-input>
+
+  <ion-select [(ngModel)]="role" interface="action-sheet" placeholder="Selecciona tu rol">
+    <ion-select-option value="user">Usuario</ion-select-option>
+    <ion-select-option value="critic">Crítico</ion-select-option>
+  </ion-select>
+
+  <ion-button expand="block" (click)="register()" [disabled]="loading">
+    {{ loading ? 'Registrando...' : 'Registrarse' }}
+  </ion-button>
+
+  <ion-button fill="clear" routerLink="/login">¿Ya tienes cuenta? Inicia sesión</ion-button>
+</ion-content>

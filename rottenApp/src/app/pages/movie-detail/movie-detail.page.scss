@@ -1,0 +1,20 @@
+.movie-img {
+  max-width: 250px;
+  border-radius: 10px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+ion-textarea,
+ion-input {
+  margin-bottom: 10px;
+}

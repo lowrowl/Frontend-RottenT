@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-input [(ngModel)]="email" placeholder="Email" type="email"></ion-input>
+  <ion-input [(ngModel)]="password" placeholder="Contraseña" type="password"></ion-input>
+
+  <ion-button expand="block" (click)="login()" [disabled]="loading">
+    {{ loading ? 'Cargando...' : 'Iniciar sesión' }}
+  </ion-button>
+
+  <ion-button fill="clear" routerLink="/register">¿No tienes cuenta? Regístrate</ion-button>
+</ion-content>

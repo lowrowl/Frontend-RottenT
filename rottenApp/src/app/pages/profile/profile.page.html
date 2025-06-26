@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- ───────── Usuario ───────── -->
+  <div *ngIf="user" class="ion-margin-bottom">
+    <h2>{{ user.username }}</h2>
+    <p><strong>Rol:</strong> {{ user.role }}</p>
+  </div>
+
+  <!-- ───────── Conmutador ───────── -->
+  <ion-segment [(ngModel)]="selectedTab" class="ion-margin-bottom">
+    <ion-segment-button value="watchlist">
+      <ion-label>Ver más tarde</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="seenlist">
+      <ion-label>Mi lista</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- ───────── Grid de películas ───────── -->
+  <ion-grid *ngIf="!loading && activeList.length">
+    <ion-row>
+      <ion-col size="6" sizeMd="4" sizeLg="3" *ngFor="let m of activeList">
+        <ion-card (click)="openDetail(m.tmdbId)">
+          <ion-img [src]="m.posterUrl || 'assets/placeholder.jpg'"></ion-img>
+
+          <ion-card-header>
+            <ion-card-title class="card-title-multiline">{{ m.title }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content class="ratings">
+            <ion-badge color="primary">Usuarios: {{ m.averageUserRating ?? '–' }}</ion-badge>
+            <ion-badge color="tertiary" class="critic">Críticos: {{ m.averageCriticRating ?? '–' }}</ion-badge>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- ───────── Vacío ───────── -->
+  <div *ngIf="!loading && activeList.length === 0" class="ion-text-center ion-margin-top">
+    <p>No hay películas en esta lista.</p>
+  </div>
+
+</ion-content>
