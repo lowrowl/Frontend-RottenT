@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'tabs/home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
@@ -32,13 +32,5 @@ export const routes: Routes = [
   {
     path: 'register',
     loadComponent: () => import('./pages/register/register.page').then(m => m.RegisterPage)
-  },
-  {
-    path: 'tabs',
-    loadComponent: () => import('./tabs/tabs.page').then( m => m.TabsPage)
-  },
-  {
-    path: 'profile',
-    loadComponent: () => import('./pages/profile/profile.page').then( m => m.ProfilePage)
   }
 ];

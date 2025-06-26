@@ -73,4 +73,9 @@ export class ProfilePage implements OnInit {
   openDetail(tmdbId: number) {
     this.router.navigate(['/movie', tmdbId]);   // misma ruta que en Home
   }
+
+  signOut() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
 }

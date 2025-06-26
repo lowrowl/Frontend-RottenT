@@ -1,22 +1,40 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Registro</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-  <ion-input [(ngModel)]="username" placeholder="Nombre de usuario"></ion-input>
-  <ion-input [(ngModel)]="email" placeholder="Correo electrónico" type="email"></ion-input>
-  <ion-input [(ngModel)]="password" type="password" placeholder="Contraseña"></ion-input>
-
-  <ion-select [(ngModel)]="role" interface="action-sheet" placeholder="Selecciona tu rol">
-    <ion-select-option value="user">Usuario</ion-select-option>
-    <ion-select-option value="critic">Crítico</ion-select-option>
-  </ion-select>
-
-  <ion-button expand="block" (click)="register()" [disabled]="loading">
-    {{ loading ? 'Registrando...' : 'Registrarse' }}
-  </ion-button>
-
-  <ion-button fill="clear" routerLink="/login">¿Ya tienes cuenta? Inicia sesión</ion-button>
-</ion-content>
+<div class="register-container">
+  <form (ngSubmit)="register()" #registerForm="ngForm">
+    <h1>Registro</h1>
+    <input 
+      [(ngModel)]="username" 
+      name="username" 
+      placeholder="Nombre de usuario" 
+      required 
+      autocomplete="username"
+    />
+    <input 
+      [(ngModel)]="email" 
+      name="email" 
+      placeholder="Correo electrónico" 
+      type="email" 
+      required 
+      autocomplete="email"
+    />
+    <input 
+      [(ngModel)]="password" 
+      name="password" 
+      type="password" 
+      placeholder="Contraseña" 
+      required 
+      autocomplete="new-password"
+    />
+    <select [(ngModel)]="role" name="role" required>
+      <option value="" disabled selected>Selecciona tu rol</option>
+      <option value="user">Usuario</option>
+      <option value="critic">Crítico</option>
+    </select>
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Registrando...' : 'Registrarse' }}
+    </button>
+    <div class="login-link">
+      <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </form>
+</div>

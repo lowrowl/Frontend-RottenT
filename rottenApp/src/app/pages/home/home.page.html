@@ -1,34 +1,36 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Películas Populares</ion-title>
-  </ion-toolbar>
+<header class="main-header">
+  <div class="toolbar">
+    <h1>Películas Populares</h1>
+  </div>
+  <div class="toolbar">
+    <input
+      type="search"
+      placeholder="Buscar..."
+      (input)="onSearch($event)"
+      class="searchbar"
+    />
+  </div>
+</header>
 
-  <ion-toolbar>
-    <ion-searchbar placeholder="Buscar..." (ionInput)="onSearch($event)"></ion-searchbar>
-  </ion-toolbar>
-</ion-header>
+<main class="ion-padding">
+  <div *ngIf="loading" class="center-spinner">
+    <div class="spinner"></div>
+  </div>
 
-<ion-content class="ion-padding">
-
-  <ion-spinner *ngIf="loading" name="crescent" class="center-spinner"></ion-spinner>
-
-  <ion-grid *ngIf="!loading">
-    <ion-row>
-      <ion-col size="6" sizeMd="4" sizeLg="3" *ngFor="let m of movies">
-        <ion-card (click)="openDetail(m.tmdbId)">
-          <ion-img [src]="m.posterUrl || 'assets/placeholder.jpg'"></ion-img>
-
-          <ion-card-header>
-            <ion-card-title class="card-title-multiline">{{ m.title }}</ion-card-title>
-          </ion-card-header>
-
-          <ion-card-content class="ratings">
-            <ion-badge color="primary">Usuarios: {{ m.averageUserRating ?? '–' }}</ion-badge>
-            <ion-badge color="tertiary" class="critic">Críticos: {{ m.averageCriticRating ?? '–' }}</ion-badge>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-</ion-content>
+  <div *ngIf="!loading" class="movie-grid">
+    <div class="movie-row">
+      <div class="movie-col" *ngFor="let m of movies">
+        <div class="movie-card" (click)="openDetail(m.tmdbId)">
+          <img [src]="m.posterUrl || 'assets/placeholder.jpg'" alt="Poster" class="movie-img" />
+          <div class="movie-card-header">
+            <div class="card-title-multiline">{{ m.title }}</div>
+          </div>
+          <div class="ratings">
+            <span class="badge badge-user">Usuarios: {{ m.averageUserRating ?? '–' }}</span>
+            <span class="badge badge-critic">Críticos: {{ m.averageCriticRating ?? '–' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
