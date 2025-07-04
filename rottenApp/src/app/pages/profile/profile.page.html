@@ -1,53 +1,64 @@
-<!-- Header -->
-<header class="main-header">
-  <div class="toolbar">
-    <h1>Mi Perfil</h1>
-    <button class="signout-btn" (click)="signOut()" title="Cerrar sesión">
-      <span class="icon">&#x1F511;</span>
-      <span class="text">Salir</span>
-    </button>
-  </div>
-</header>
-
-<main class="ion-padding">
-  <div *ngIf="user" class="profile-user">
-    <h2>{{ user.username }}</h2>
-    <p><strong>Rol:</strong> {{ user.role }}</p>
-  </div>
-
-  <div class="tab-switcher">
-    <button
-      class="tab-btn"
-      [class.active]="selectedTab === 'watchlist'"
-      (click)="selectedTab = 'watchlist'">
-      Ver más tarde
-    </button>
-    <button
-      class="tab-btn"
-      [class.active]="selectedTab === 'seenlist'"
-      (click)="selectedTab = 'seenlist'">
-      Mi lista
-    </button>
+<ion-content [fullscreen]="true">
+  <div class="header-container">
+    <div class="toolbar">
+      <h1>Mi Perfil</h1>
+      <button class="signout-btn" (click)="signOut()" title="Cerrar sesión">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="logout-icon">
+          <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+          <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+          <g id="SVGRepo_iconCarrier">
+            <path d="M12 12H19M19 12L16 15M19 12L16 9" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M19 6V5C19 3.89543 18.1046 3 17 3H7C5.89543 3 5 3.89543 5 5V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </g>
+        </svg>
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="!loading && activeList.length" class="movie-grid">
-    <div class="movie-row">
+  <div class="ion-padding">
+    <div *ngIf="user" class="profile-user">
+      <h2>{{ user.username }}</h2>
+      <p><strong>Rol:</strong> {{ user.role }}</p>
+    </div>
+
+    <div class="tab-switcher">
+      <button
+        class="tab-btn"
+        [class.active]="selectedTab === 'watchlist'"
+        (click)="selectedTab = 'watchlist'"
+      >
+        Ver más tarde
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="selectedTab === 'seenlist'"
+        (click)="selectedTab = 'seenlist'"
+      >
+        Mi lista
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="center-spinner">
+      <div class="spinner"></div>
+    </div>
+
+    <div *ngIf="!loading && activeList.length" class="movie-grid">
       <div class="movie-col" *ngFor="let m of activeList">
         <div class="movie-card" (click)="openDetail(m.tmdbId)">
           <img [src]="m.posterUrl || 'assets/placeholder.jpg'" alt="Poster" class="movie-img" />
-          <div class="movie-card-header">
+          <div class="movie-card-content">
             <div class="card-title-multiline">{{ m.title }}</div>
-          </div>
-          <div class="ratings">
-            <span class="badge badge-user">Usuarios: {{ m.averageUserRating ?? '–' }}</span>
-            <span class="badge badge-critic">Críticos: {{ m.averageCriticRating ?? '–' }}</span>
+            <div class="ratings">
+              <span class="badge badge-user">Usuarios: {{ m.averageUserRating ?? '–' }}</span>
+              <span class="badge badge-critic">Críticos: {{ m.averageCriticRating ?? '–' }}</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div *ngIf="!loading && activeList.length === 0" class="empty-list">
-    <p>No hay películas en esta lista.</p>
+    <div *ngIf="!loading && !activeList.length" class="empty-list">
+      <p>No hay películas en esta lista.</p>
+    </div>
   </div>
-</main>
+</ion-content>

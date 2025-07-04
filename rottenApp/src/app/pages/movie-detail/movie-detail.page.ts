@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, RangeCustomEvent } from '@ionic/angular'; // Import RangeCustomEvent
 
 import { ApiService } from 'src/app/services/api.service';
 
@@ -30,7 +30,10 @@ export class MovieDetailPage implements OnInit {
   /* formulario comentario */
   commentText  = '';
   commentScore: number | null = null;
-  scores       = [1,2,3,4,5,6,7,8,9,10];
+
+  // New properties for user's own comment display
+  hasUserCommented: boolean = false;
+  userComment: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -75,7 +78,10 @@ export class MovieDetailPage implements OnInit {
 
   private loadComments(movieId: string) {
     this.api.getCommentsByMovie(movieId).subscribe({
-      next : res => (this.comments = res),
+      next : res => {
+        this.comments = res;
+        this.checkUserComment(); // Check if the user has commented after loading comments
+      },
       error: err => console.error('Error comentarios', err)
     });
   }
@@ -93,11 +99,12 @@ export class MovieDetailPage implements OnInit {
   }
 
   /* ─────────── Comentarios ─────────── */
-  submitComment() {
+  submitComment() { // Renamed from postComment to match HTML
     const token = localStorage.getItem('token');
     if (!token) return alert('¡Debes iniciar sesión para comentar!');
 
-    if (!this.movie?._id || !this.commentText || this.commentScore == null) return;
+    // Ensure commentScore is a number and not null for the API call
+    if (!this.movie?._id || !this.commentText || this.commentScore === null) return;
 
     this.api.createComment(
       { movieId: this.movie._id, content: this.commentText, rating: this.commentScore },
@@ -105,27 +112,62 @@ export class MovieDetailPage implements OnInit {
     ).subscribe({
       next : () => {
         this.commentText  = '';
-        this.commentScore = null;
-        this.loadComments(this.movie._id);
+        this.commentScore = null; // Reset score after submission
+        this.loadComments(this.movie._id); // Reload comments to show the new one
       },
       error: err => alert(err.error?.message || 'Error al enviar comentario')
     });
   }
 
+  // Handle ionChange event for the range slider
+  onCommentScoreChange(event: RangeCustomEvent) {
+    this.commentScore = event.detail.value as number;
+  }
+
+  // Helper to check if the current user has already commented on the movie
+  private checkUserComment() {
+    if (this.user && this.comments.length > 0) {
+      this.userComment = this.comments.find(
+        (comment: any) => comment.userId._id === this.user._id
+      );
+      this.hasUserCommented = !!this.userComment;
+
+      // Filter out the user's own comment from the main comments array
+      this.comments = this.comments.filter(
+        (comment: any) => comment.userId._id !== this.user._id
+      );
+    } else {
+      this.hasUserCommented = false;
+      this.userComment = null;
+    }
+  }
+
   /* ─────────── Watchlist / Mi lista ─────────── */
-  addToWatchlist() {
+  toggleWatchlist() {
     const token = localStorage.getItem('token');
     if (!token) return alert('Debes iniciar sesión');
 
     if (this.isInSeenlist()) return alert('Ya está en tu lista de películas vistas');
 
-    this.api.addToWatchlist(this.movie._id, token).subscribe({
-      next : () => {
-        alert('Agregada a Ver más tarde');
-        this.loadUserLists(token);          // ← refrescar
-      },
-      error: err => console.error(err)
-    });
+    if (this.isInWatchlist()) {
+      // Remove from watchlist
+      this.api.removeFromWatchlist(this.movie._id, token).subscribe({
+        next : () => {
+          alert('Removida de Ver más tarde');
+          this.loadUserLists(token); // Refresh lists
+        },
+        error: err => console.error(err)
+      });
+    } else {
+      // Add to watchlist
+      this.api.addToWatchlist(this.movie._id, token).subscribe({
+        next : () => {
+          alert('Agregada a Ver más tarde');
+          this.loadUserLists(token); // Refresh lists
+        },
+        error: err => console.error(err)
+      });
+    }
   }
 
   addToMyList() {
@@ -134,12 +176,14 @@ export class MovieDetailPage implements OnInit {
 
     /* Si existe en Watchlist primero la quitamos */
     const afterAdd = () => {
-      this.api.addToSeenlist(this.movie._id, token).subscribe({
+      // Corrected call: Use addToMyList from api.service (which targets /api/users/mylist)
+      this.api.addToMyList(this.movie._id, token).subscribe({
         next : () => this.loadUserLists(token),
         error: err => console.error('Error Mi Lista', err)
       });
     };
 
+    // If it's in watchlist, remove it first, then add to seenlist. Otherwise, just add to seenlist.
     if (this.isInWatchlist()) {
       this.api.removeFromWatchlist(this.movie._id, token).subscribe({
         next : afterAdd,

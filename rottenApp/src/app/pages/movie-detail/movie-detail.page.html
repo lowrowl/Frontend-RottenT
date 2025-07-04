@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home" text="Volver"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/home" text="Volver"></ion-back-button>
     </ion-buttons>
     <ion-title>Detalle de Película</ion-title>
   </ion-toolbar>
@@ -9,14 +9,11 @@
 
 <ion-content class="ion-padding">
 
-  <!-- Loader / error -->
   <ion-spinner *ngIf="loading" name="crescent" class="center-spinner"></ion-spinner>
   <div *ngIf="error">{{ error }}</div>
 
-  <!-- ─────────── Detalle ─────────── -->
   <div *ngIf="movie && !loading">
 
-    <!-- Poster centrado -->
     <div style="display:flex;justify-content:center;margin-bottom:1rem;">
       <ion-img
         [src]="movie.posterUrl || 'assets/placeholder.jpg'"
@@ -24,70 +21,87 @@
       </ion-img>
     </div>
 
-    <!-- Datos -->
     <h2>{{ movie.title }}</h2>
     <p><strong>Fecha de lanzamiento:</strong> {{ movie.releaseDate }}</p>
     <p><strong>Descripción:</strong> {{ movie.description }}</p>
     <p><strong>Géneros:</strong> {{ movie.categories?.join(', ') }}</p>
     <p><strong>Reparto:</strong> {{ movie.cast?.join(', ') }}</p>
 
-    <!-- ─────────── Botones de listas ─────────── -->
-    <ion-grid class="ion-margin-vertical">
-
-      <!-- Ya está en Mi lista -->
-      <ion-row *ngIf="isInSeenlist()">
-        <ion-col size="12">
-          <ion-badge color="success" class="ion-padding ion-text-center" style="display:block;">
-            ✔ Esta película ya está en tu lista
-          </ion-badge>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6">
+          <p><strong>Puntuación Usuarios:</strong> {{ movie.averageUserRating ?? 'N/A' }}</p>
+        </ion-col>
+        <ion-col size="6">
+          <p><strong>Puntuación Críticos:</strong> {{ movie.averageCriticRating ?? 'N/A' }}</p>
         </ion-col>
       </ion-row>
+    </ion-grid>
 
-      <!-- Está en Ver más tarde pero NO en Mi lista -->
-      <ion-row *ngIf="isInWatchlist() && !isInSeenlist()">
-        <ion-col size="12">
-          <ion-button expand="block" color="success" (click)="moveToMyList()">
-            Marcar como vista
-          </ion-button>
-        </ion-col>
-      </ion-row>
-
-      <!-- No está en ninguna lista -->
+    <ion-grid class="ion-margin-top">
       <ion-row *ngIf="!isInWatchlist() && !isInSeenlist()">
-        <ion-col>
-          <ion-button expand="block"
-                      color="warning"
-                      (click)="addToWatchlist()">
-            Ver más tarde
+        <ion-col size="6">
+          <ion-button expand="block" color="primary" (click)="toggleWatchlist()">
+            Agregar a Ver más tarde
           </ion-button>
         </ion-col>
-
-        <ion-col>
-          <ion-button expand="block"
-                      color="success"
-                      (click)="addToMyList()">
+        <ion-col size="6">
+          <ion-button expand="block" color="success" (click)="addToMyList()">
             Agregar a Mi lista
           </ion-button>
         </ion-col>
       </ion-row>
 
+      <ion-row *ngIf="isInWatchlist() && !isInSeenlist()">
+        <ion-col size="12">
+          <ion-button expand="block" color="tertiary" (click)="moveToMyList()">
+            Mover a Mi lista (ya vista)
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-row *ngIf="isInSeenlist()">
+        <ion-col size="12" class="ion-text-center">
+          <p style="color: var(--ion-color-medium);">Ya viste la película.</p>
+        </ion-col>
+      </ion-row>
     </ion-grid>
 
-    <!-- ─────────── Comentarios ─────────── -->
     <ion-list class="ion-margin-top">
       <ion-list-header><strong>Comentarios</strong></ion-list-header>
+
+      <ion-item *ngIf="hasUserCommented && userComment" class="user-comment-item">
+        <ion-label>
+          <h3>Tu Comentario:</h3>
+          <p><strong>{{ userComment.userId.username }} ({{ userComment.userId.role }})</strong></p>
+          <div class="star-rating">
+            <span *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= userComment.rating">&#9733;</span>
+            <span class="score-text">({{ userComment.rating }}/5)</span>
+          </div>
+          <p>{{ userComment.content }}</p>
+        </ion-label>
+      </ion-item>
 
       <ion-item *ngFor="let c of comments">
         <ion-label>
           <p><strong>{{ c.userId.username }} ({{ c.userId.role }})</strong></p>
-          <p><strong>Puntaje:</strong> {{ c.rating }}/10</p>
+          <div class="star-rating">
+            <span *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= c.rating">&#9733;</span>
+            <span class="score-text">({{ c.rating }}/5)</span>
+          </div>
           <p>{{ c.content }}</p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item *ngIf="!hasUserCommented && comments.length === 0 && !userComment" class="empty-list-message">
+        <ion-label>
+          <p>Sé el primero en comentar esta película.</p>
         </ion-label>
       </ion-item>
     </ion-list>
 
-    <!-- Nuevo comentario -->
-    <div class="ion-margin-top">
+
+    <div class="ion-margin-top comment-form-section" *ngIf="!hasUserCommented">
       <ion-label><strong>Deja tu comentario:</strong></ion-label>
       <ion-textarea maxlength="70"
                     counter="true"
@@ -95,16 +109,30 @@
                     [(ngModel)]="commentText">
       </ion-textarea>
 
-      <ion-label class="ion-margin-top"><strong>Puntaje</strong></ion-label>
-      <ion-select interface="popover"
-                  [(ngModel)]="commentScore"
-                  placeholder="Selecciona puntaje">
-        <ion-select-option *ngFor="let s of scores" [value]="s">{{ s }}</ion-select-option>
-      </ion-select>
+      <ion-label class="ion-margin-top"><strong>Puntaje:</strong></ion-label>
+      <div class="rating-slider">
+        <ion-range
+          aria-label="Rating"
+          min="0" max="5" step="1"
+          [pin]="true"
+          [value]="commentScore || 0"
+          (ionChange)="onCommentScoreChange($event)"
+        >
+          <ion-icon size="small" slot="start" name="star-outline"></ion-icon>
+          <ion-icon size="small" slot="end" name="star"></ion-icon>
+        </ion-range>
+        <div class="star-display">
+          <span *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= (commentScore || 0)">&#9733;</span>
+          <span class="score-text" *ngIf="(commentScore || 0) > 0">({{ commentScore || 0 }}/5)</span>
+        </div>
+      </div>
 
-      <ion-button expand="block" color="primary" (click)="submitComment()">
-        Enviar
+      <ion-button expand="block" class="ion-margin-top" (click)="submitComment()" [disabled]="!commentText || (commentScore === 0 || commentScore === null)">
+        Publicar comentario
       </ion-button>
+    </div>
+    <div class="ion-margin-top comment-form-section" *ngIf="hasUserCommented">
+      <p class="commented-message">Ya has enviado un comentario para esta película.</p>
     </div>
 
   </div>

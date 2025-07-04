@@ -34,7 +34,7 @@ export class LoginPage {
         localStorage.setItem('token', res.token);
         localStorage.setItem('user', JSON.stringify(res.user));
         this.loading = false;
-        await this.router.navigateByUrl('/home');
+        await this.router.navigateByUrl('/tabs/home');
       },
       error: (err) => {
         this.loading = false;

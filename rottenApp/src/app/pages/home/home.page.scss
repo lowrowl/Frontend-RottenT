@@ -1,11 +1,19 @@
-.main-header {
-  background: transparent;
-  box-shadow: none;
-  padding: 0.5rem 0 0.5rem 0;
-  margin-bottom: 1rem;
+/* Estilos generales para el fondo */
+:host {
+  ion-content {
+    --background: linear-gradient(135deg, #181818 0%, #232526 100%);
+    // Asegurarse que el fondo del ion-content sea el que cubre toda la pantalla
+    // Si tuvieras un ion-footer, el ion-content se ajustaría automáticamente.
+  }
 }
 
-.toolbar {
+.header-container { /* Nuevo contenedor para tu encabezado desplazable */
+  background: transparent; // No necesita fondo ya que el ion-content lo tiene
+  padding: 0.5rem 0; // Padding superior e inferior para el header
+  margin-bottom: 1rem; // Margen para separar del grid de películas
+}
+
+.toolbar { // Estos estilos ya los tenías, se aplican a los divs dentro de header-container
   display: flex;
   align-items: center;
   justify-content: center;
@@ -19,86 +27,86 @@ h1 {
   color: #fff;
   letter-spacing: 1px;
   text-shadow: 1px 1px 2px #18191a, -1px -1px 2px #2c2d2f;
+  text-align: center; // Asegurar centrado si no lo hereda
 }
 
-body, .ion-padding {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #181818 0%, #232526 100%);
-  padding: 1rem;
-}
+.custom-searchbar {
+  --background: #232526;
+  --color: #fff;
+  --placeholder-color: rgba(255, 255, 255, 0.6);
+  --icon-color: #fff;
+  --clear-button-color: #fff;
+  padding: 0 1rem;
 
-.searchbar {
-  width: 100%;
-  max-width: 400px;
-  padding: 0.7rem 1.1rem;
-  border: none;
-  border-radius: 20px;
-  font-size: 1rem;
-  outline: none;
-  background: #232526;
-  color: #fff;
-  box-shadow:
-    4px 4px 12px #18191a,
-    -4px -4px 12px #2c2d2f;
-  transition: box-shadow 0.2s, background 0.2s;
-}
-.searchbar:focus {
-  background: #232526;
-  box-shadow:
-    inset 2px 2px 6px #18191a,
-    inset -2px -2px 6px #2c2d2f,
-    0 0 0 2px #e50914;
+  .searchbar-input {
+    border-radius: 20px;
+    box-shadow:
+      inset 2px 2px 6px #18191a,
+      inset -2px -2px 6px #2c2d2f;
+    transition: box-shadow 0.2s, background 0.2s;
+  }
+  &.searchbar-has-focus .searchbar-input {
+    box-shadow:
+      inset 2px 2px 6px #18191a,
+      inset -2px -2px 6px #2c2d2f,
+      0 0 0 2px #e50914;
+  }
 }
 
 .center-spinner {
-  margin-top: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 200px;
 }
+
 .spinner {
-  border: 4px solid #232526;
+  border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid #e50914;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
 .movie-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
   justify-content: center;
+  align-items: stretch;
+  padding-bottom: 20px;
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 2rem;
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
 }
-.movie-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem 1rem;
-  width: 100%;
-  justify-content: center;
-}
+
 .movie-col {
-  flex: 1 1 180px;
-  max-width: 220px;
-  min-width: 160px;
   display: flex;
+  justify-content: center;
 }
+
 .movie-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 250px;
+  min-height: 400px;
   background: #232526;
   border-radius: 18px;
   box-shadow:
-    8px 8px 24px #18191a,
-    -8px -8px 24px #2c2d2f,
-    0 1.5px 8px 0 rgba(0,0,0,0.18);
+    4px 4px 12px #18191a,
+    -4px -4px 12px #2c2d2f;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   transition: box-shadow 0.2s, transform 0.2s;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.04);
@@ -112,14 +120,18 @@ body, .ion-padding {
 }
 .movie-img {
   width: 100%;
-  height: 300px;
+  height: 250px;
   object-fit: cover;
   border-top-left-radius: 18px;
   border-top-right-radius: 18px;
   background: #18191a;
 }
-.movie-card-header {
-  padding: 0.5rem 1rem 0 1rem;
+.movie-card-content {
+  padding: 0.8rem 1rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: space-between;
 }
 .card-title-multiline {
   display: -webkit-box;
@@ -131,47 +143,28 @@ body, .ion-padding {
   font-size: 1.08rem;
   line-height: 1.2rem;
   height: 2.4rem;
-  font-weight: 600;
   color: #fff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 .ratings {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 0.5rem 1rem 1rem 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 .badge {
-  display: inline-block;
-  padding: 0.25em 0.8em;
-  border-radius: 12px;
-  font-size: 0.95em;
-  font-weight: 500;
-  background: #232526;
-  color: #fff;
-  margin-bottom: 2px;
-  width: fit-content;
-  box-shadow:
-    2px 2px 6px #18191a,
-    -2px -2px 6px #2c2d2f;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 .badge-user {
-  background: #e50914;
-  color: #fff;
+  background: rgba(0, 128, 0, 0.7);
 }
 .badge-critic {
-  background: #fbbf24;
-  color: #232526;
-}
-
-@media (max-width: 600px) {
-  .movie-row, .movie-grid {
-    gap: 1rem 0.5rem;
-  }
-  .movie-col {
-    max-width: 48vw;
-    min-width: 120px;
-  }
-  .movie-img {
-    height: 180px;
-  }
+  background: rgba(255, 165, 0, 0.7);
 }
