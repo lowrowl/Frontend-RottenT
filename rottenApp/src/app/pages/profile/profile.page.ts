@@ -25,97 +25,92 @@ export class ProfilePage implements OnInit {
   selectedTab: 'watchlist' | 'seenlist' = 'watchlist';
 
   loading = true;
-  editMode = false; // New: To control the edit mode
-  editableUser: any = {}; // New: Temporary object for editable user data
+  editMode = false;
+  editableUser: any = {};
 
   constructor(
     private api: ApiService,
     private router: Router,
-    private alertController: AlertController // Inject AlertController
+    private alertController: AlertController
   ) {}
 
   /** Se dispara cada vez que navegas a /profile (ideal para refrescar) */
   ionViewWillEnter() {
-    this.initProfile();
+    this.user = JSON.parse(localStorage.getItem('user') || 'null');
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.loadUserLists(token);
+    } else {
+      this.loading = false;
+    }
   }
 
   ngOnInit() {
-    this.initProfile();
+    // Si necesitas inicialización única
   }
 
-  /** Obtiene perfil + listas */
-  private initProfile() {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      this.loading = false;
-      return;
-    }
-
+  /**
+   * Carga las listas del usuario (watchlist y seenlist)
+   */
+  private loadUserLists(token: string) {
     this.loading = true;
-
-    this.api.getUserInfo(token).subscribe({
-      next: (res) => {
-        this.user = res;
-        // Initialize editableUser with a copy of user data
-        this.editableUser = { ...this.user };
-        this.loadLists(token);
-      },
-      error: (err) => {
-        console.error('Error cargando perfil', err);
-        this.loading = false;
-      }
-    });
-  }
-
-  /** Trae ambas listas en paralelo y marca loading=false al final */
-  private loadLists(token: string) {
     let completed = 0;
     const done = () => (++completed === 2) && (this.loading = false);
 
+    // Watchlist
     this.api.getUserWatchlist(token).subscribe({
       next: (res) => {
         this.watchlist = res;
+        console.log('Watchlist de películas:', this.watchlist);
         done();
       },
       error: (err) => {
-        console.error('watchlist', err);
+        console.error('Error al cargar watchlist:', err);
         done();
       }
     });
 
+    // Seenlist (Mi lista)
     this.api.getUserSeenlist(token).subscribe({
       next: (res) => {
         this.seenlist = res;
+        console.log('Seenlist de películas:', this.seenlist);
         done();
       },
       error: (err) => {
-        console.error('seenlist', err);
+        console.error('Error al cargar seenlist:', err);
         done();
       }
     });
   }
 
-  /** Devuelve la lista activa (watchlist o seenlist) */
-  get activeList() {
+  /**
+   * Propiedad para obtener la lista activa (watchlist o seenlist)
+   */
+  get activeList(): any[] {
     return this.selectedTab === 'watchlist' ? this.watchlist : this.seenlist;
   }
 
+  /**
+   * Navega al detalle de la película
+   * @param tmdbId El ID de la película TMDB
+   */
   openDetail(tmdbId: number) {
-    this.router.navigate(['/tabs/movie-detail', tmdbId]);
+    console.log('Intentando navegar a detalle con tmdbId:', tmdbId);
+    this.router.navigate(['/movie', tmdbId]);
   }
 
   signOut() {
-    localStorage.removeItem('token');
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    localStorage.clear();
+    this.router.navigate(['/']);
   }
 
-  // New: Enable edit mode and copy current user data
+  // ¡CORREGIDO! Cambiado de 'enterEditMode' a 'enableEditMode' para coincidir con el HTML
   enableEditMode() {
     this.editMode = true;
-    this.editableUser = { ...this.user }; // Create a copy to edit
+    this.editableUser = { ...this.user };
   }
 
-  // New: Save profile changes
   async saveProfile() {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -123,17 +118,16 @@ export class ProfilePage implements OnInit {
       return;
     }
 
-    // Basic validation
     if (!this.editableUser.username || !this.editableUser.role) {
       this.presentAlert('Error', 'Usuario y Rol no pueden estar vacíos.');
       return;
     }
 
-    // --- CHANGE START ---
     this.api.updateProfile(this.editableUser, token).subscribe({
       next: (updatedUser) => {
-        this.user = updatedUser; // Update the main user object
-        this.editMode = false; // Exit edit mode
+        this.user = updatedUser;
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        this.editMode = false;
         this.presentAlert('Éxito', 'Perfil actualizado correctamente.');
       },
       error: (error) => {
@@ -141,16 +135,13 @@ export class ProfilePage implements OnInit {
         this.presentAlert('Error', error.error?.message || 'Error al actualizar el perfil.');
       }
     });
-    // --- CHANGE END ---
   }
 
-  // New: Cancel edit mode and revert changes
   cancelEdit() {
     this.editMode = false;
-    this.editableUser = { ...this.user }; // Revert to original user data
+    this.editableUser = { ...this.user };
   }
 
-  // Helper for presenting alerts
   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
       header: header,
