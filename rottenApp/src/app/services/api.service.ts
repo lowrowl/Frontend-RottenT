@@ -52,7 +52,7 @@ export class ApiService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${API_URL}/users/watchlist`, { headers });
   }
-  
+
   getUserSeenlist(token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${API_URL}/users/seenlist`, { headers });
@@ -62,12 +62,12 @@ export class ApiService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${API_URL}/users/watchlist`, { movieId }, { headers });
   }
-  
+
   addToMyList(movieId: string, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${API_URL}/users/mylist`, { movieId }, { headers });
   }
-  
+
   removeFromWatchlist(movieId: string, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${API_URL}/users/watchlist/remove`, { movieId }, { headers });
@@ -77,9 +77,15 @@ export class ApiService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${API_URL}/users/seenlist`, { movieId }, { headers });
   }
-  
+
   moveToMyList(movieId: string, token: string): Observable<any> {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.post(`${API_URL}/users/watchlist/to-mylist`, { movieId }, { headers });
+  }
+
+  updateProfile(profileData: any, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    // Asegúrate de que el backend espera PATCH para esta ruta
+    return this.http.patch(`${API_URL}/users/profile`, profileData, { headers });
   }
 }

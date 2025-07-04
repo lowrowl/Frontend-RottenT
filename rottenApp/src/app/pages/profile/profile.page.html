@@ -16,9 +16,42 @@
   </div>
 
   <div class="ion-padding">
-    <div *ngIf="user" class="profile-user">
-      <h2>{{ user.username }}</h2>
-      <p><strong>Rol:</strong> {{ user.role }}</p>
+    <div *ngIf="user" class="profile-info-container">
+      <ion-grid>
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12">
+            <div *ngIf="!editMode" class="profile-display">
+              <h2 class="profile-username">{{ user.username }}</h2>
+              <p class="profile-role"><strong>Rol:</strong> {{ user.role }}</p>
+              <ion-button expand="block" fill="outline" class="edit-btn" (click)="enableEditMode()">
+                Editar Perfil
+              </ion-button>
+            </div>
+
+            <div *ngIf="editMode" class="profile-edit">
+              <ion-item class="profile-item">
+                <ion-label position="stacked">Usuario</ion-label>
+                <ion-input [(ngModel)]="editableUser.username" placeholder="Tu nombre de usuario"></ion-input>
+              </ion-item>
+
+              <ion-item class="profile-item">
+                <ion-label position="stacked">Rol</ion-label>
+                <ion-select [(ngModel)]="editableUser.role" placeholder="Selecciona un rol">
+                  <ion-select-option value="user">Usuario</ion-select-option>
+                  <ion-select-option value="critic">Crítico</ion-select-option>
+                </ion-select>
+              </ion-item>
+
+              <ion-button expand="block" class="save-btn ion-margin-top" (click)="saveProfile()">
+                Guardar Cambios
+              </ion-button>
+              <ion-button expand="block" fill="clear" class="cancel-btn" (click)="cancelEdit()">
+                Cancelar
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </div>
 
     <div class="tab-switcher">

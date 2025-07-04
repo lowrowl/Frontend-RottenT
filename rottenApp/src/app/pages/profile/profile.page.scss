@@ -90,6 +90,103 @@ h1 {
   }
 }
 
+/* New styles for profile info and edit mode */
+.profile-info-container {
+  background: #232526;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow:
+    4px 4px 12px #18191a,
+    -4px -4px 12px #2c2d2f;
+  color: #fff;
+  text-align: center;
+}
+
+.profile-display {
+  margin-bottom: 1rem;
+}
+
+.profile-username {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  text-shadow: 1px 1px 2px #18191a, -1px -1px 2px #2c2d2f;
+}
+
+.profile-role {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1.5rem;
+}
+
+.edit-btn {
+  --background: #e50914;
+  --background-activated: darken(#e50914, 10%);
+  --background-focused: darken(#e50914, 7%);
+  --background-hover: darken(#e50914, 5%);
+  --color: #fff;
+  --border-radius: 8px;
+  --box-shadow: 2px 2px 6px #18191a, -2px -2px 6px #2c2d2f;
+  font-weight: 600;
+  padding: 1.2rem 1rem;
+  font-size: 1rem;
+}
+
+.profile-edit {
+  ion-item {
+    --background: #181818;
+    --color: #fff;
+    --border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: inset 2px 2px 5px #111111, inset -2px -2px 5px #252525;
+    border: 1px solid rgba(255,255,255,0.05);
+
+    ion-label {
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0.3rem;
+    }
+    ion-input, ion-select {
+      --padding-start: 10px;
+      --padding-end: 10px;
+      --placeholder-color: rgba(255, 255, 255, 0.5);
+      --placeholder-opacity: 0.8;
+      color: #fff;
+    }
+    ion-select {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+
+  .save-btn {
+    --background: #4CAF50; /* Green for save */
+    --background-activated: darken(#4CAF50, 10%);
+    --background-focused: darken(#4CAF50, 7%);
+    --background-hover: darken(#4CAF50, 5%);
+    --color: #fff;
+    --border-radius: 8px;
+    --box-shadow: 2px 2px 6px #18191a, -2px -2px 6px #2c2d2f;
+    font-weight: 600;
+    padding: 1.2rem 1rem;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .cancel-btn {
+    --background: transparent;
+    --color: #e50914;
+    --border-radius: 8px;
+    --box-shadow: none;
+    font-weight: 600;
+    padding: 1.2rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+
 .tab-switcher {
   display: flex;
   justify-content: center;
