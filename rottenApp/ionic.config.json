@@ -1,7 +1,0 @@
-{
-  "name": "rottenApp",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular-standalone"
-}
