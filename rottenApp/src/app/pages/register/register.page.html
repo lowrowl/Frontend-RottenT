@@ -1,40 +1,72 @@
-<div class="register-container">
+<ion-content class="login-container" fullscreen>
   <form (ngSubmit)="register()" #registerForm="ngForm">
     <h1>Registro</h1>
-    <input 
-      [(ngModel)]="username" 
-      name="username" 
-      placeholder="Nombre de usuario" 
-      required 
-      autocomplete="username"
-    />
-    <input 
-      [(ngModel)]="email" 
-      name="email" 
-      placeholder="Correo electrónico" 
-      type="email" 
-      required 
-      autocomplete="email"
-    />
-    <input 
-      [(ngModel)]="password" 
-      name="password" 
-      type="password" 
-      placeholder="Contraseña" 
-      required 
-      autocomplete="new-password"
-    />
-    <select [(ngModel)]="role" name="role" required>
-      <option value="" disabled selected>Selecciona tu rol</option>
-      <option value="user">Usuario</option>
-      <option value="critic">Crítico</option>
-    </select>
-    <button type="submit" [disabled]="loading">
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="username"
+        name="username"
+        placeholder="Nombre de usuario"
+        required
+        autocomplete="username"
+        type="text"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Correo electrónico"
+        required
+        autocomplete="email"
+        type="email"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        autocomplete="new-password"
+        type="password"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-select
+        class="custom-input"
+        [(ngModel)]="role"
+        name="role"
+        placeholder="Selecciona tu rol"
+        interface="popover"
+        required
+      >
+        <ion-select-option value="user">Usuario</ion-select-option>
+        <ion-select-option value="critic">Crítico</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="loading"
+      class="custom-button"
+    >
       {{ loading ? 'Registrando...' : 'Registrarse' }}
-    </button>
-    <div class="login-link">
+    </ion-button>
+
+    <div class="register-link">
       <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
     </div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
   </form>
-</div>
+</ion-content>

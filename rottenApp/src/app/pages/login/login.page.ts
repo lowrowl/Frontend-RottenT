@@ -1,14 +1,16 @@
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router'; // <-- Agrega RouterModule aquí
-import { ApiService } from 'src/app/services/api.service';
+import { Router, RouterModule } from '@angular/router';
+import { ApiService } from '../../services/api.service';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, RouterModule], // <-- Agrega RouterModule aquí
+  imports: [CommonModule, FormsModule, HttpClientModule, RouterModule, IonicModule],
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss']
 })

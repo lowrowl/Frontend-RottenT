@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicModule, RangeCustomEvent } from '@ionic/angular'; // Import RangeCustomEvent
 
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-movie-detail',

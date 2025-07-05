@@ -2,13 +2,21 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { ApiService } from 'src/app/services/api.service';
 import { HttpClientModule } from '@angular/common/http';
+import { IonicModule } from '@ionic/angular';
+
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule, RouterModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    HttpClientModule,
+    IonicModule
+  ],
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss']
 })
@@ -16,7 +24,7 @@ export class RegisterPage {
   username = '';
   email = '';
   password = '';
-  role = ''; // se elige desde el select
+  role = '';
   loading = false;
   errorMessage = '';
 
@@ -42,7 +50,6 @@ export class RegisterPage {
     }).subscribe({
       next: async () => {
         this.loading = false;
-        // Mensaje de éxito puede mostrarse en login
         await this.router.navigateByUrl('/login');
       },
       error: (err) => {

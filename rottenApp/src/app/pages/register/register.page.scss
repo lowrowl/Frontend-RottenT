@@ -1,12 +1,20 @@
-.register-container {
-  min-height: 100vh;
+ion-content.login-container {
+  --background: linear-gradient(135deg, #181818 0%, #232526 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #181818 0%, #232526 100%);
+  min-height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  padding: 0;
+  position: relative;
 }
 
 form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: #232526;
   padding: 2.5rem 2rem 2rem 2rem;
   border-radius: 18px;
@@ -17,7 +25,9 @@ form {
   display: flex;
   flex-direction: column;
   min-width: 90vw;
+  max-width: 400px;
   border: 1px solid rgba(255,255,255,0.04);
+  margin: auto;
 }
 
 h1 {
@@ -30,47 +40,38 @@ h1 {
   text-shadow: 1px 1px 2px #18191a, -1px -1px 2px #2c2d2f;
 }
 
-input, select {
+ion-item {
+  --background: transparent;
+  --border-radius: 12px;
   margin-bottom: 1.2rem;
-  padding: 0.85rem 1.1rem;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.08rem;
-  background: #232526;
-  color: #fff;
   box-shadow:
     4px 4px 12px #18191a,
     -4px -4px 12px #2c2d2f;
-  outline: none;
-  transition: box-shadow 0.2s, background 0.2s;
 }
-input:focus, select:focus {
-  background: #232526;
+
+ion-input.custom-input,
+ion-select.custom-input {
+  color: #fff;
+  font-size: 1.08rem;
+  --placeholder-color: rgba(255,255,255,0.7);
+  --padding-start: 0.5rem;
+  --padding-end: 0.5rem;
+}
+
+ion-input.custom-input:focus-within,
+ion-select.custom-input:focus-within {
   box-shadow:
     inset 2px 2px 6px #18191a,
     inset -2px -2px 6px #2c2d2f,
     0 0 0 2px #e50914;
 }
 
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="20" viewBox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-  background-repeat: no-repeat;
-  background-position-x: 98%;
-  background-position-y: 50%;
-}
-
-button[type="submit"] {
+ion-button.custom-button {
   background: #e50914;
   color: #fff;
-  border: none;
   border-radius: 12px;
-  padding: 0.85rem 1.1rem;
   font-size: 1.08rem;
   font-weight: 600;
-  cursor: pointer;
   margin-bottom: 1.2rem;
   box-shadow:
     4px 4px 12px #18191a,
@@ -79,31 +80,35 @@ button[type="submit"] {
   transition: box-shadow 0.2s, background 0.2s;
   position: relative;
 }
-button[type="submit"]:active {
+
+ion-button.custom-button:active {
   box-shadow:
     inset 2px 2px 6px #18191a,
     inset -2px -2px 6px #2c2d2f;
 }
-button[disabled] {
-  background: #444;
-  color: #bbb;
+
+ion-button[disabled] {
+  background: #444 !important;
+  color: #bbb !important;
   cursor: not-allowed;
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
-.login-link {
+.register-link {
   text-align: center;
   margin-bottom: 0.5rem;
   margin-top: 1rem;
 }
-.login-link a {
+
+.register-link a {
   color: #e50914;
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   transition: color 0.2s;
 }
-.login-link a:hover {
+
+.register-link a:hover {
   color: #fff;
   text-decoration: underline;
 }

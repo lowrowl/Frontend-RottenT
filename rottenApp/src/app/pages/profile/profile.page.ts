@@ -6,7 +6,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-profile',
