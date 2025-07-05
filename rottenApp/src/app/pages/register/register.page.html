@@ -1,0 +1,72 @@
+<ion-content class="login-container" fullscreen>
+  <form (ngSubmit)="register()" #registerForm="ngForm">
+    <h1>Registro</h1>
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="username"
+        name="username"
+        placeholder="Nombre de usuario"
+        required
+        autocomplete="username"
+        type="text"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="email"
+        name="email"
+        placeholder="Correo electrónico"
+        required
+        autocomplete="email"
+        type="email"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-input
+        class="custom-input"
+        [(ngModel)]="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        autocomplete="new-password"
+        type="password"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item lines="none">
+      <ion-select
+        class="custom-input"
+        [(ngModel)]="role"
+        name="role"
+        placeholder="Selecciona tu rol"
+        interface="popover"
+        required
+      >
+        <ion-select-option value="user">Usuario</ion-select-option>
+        <ion-select-option value="critic">Crítico</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="loading"
+      class="custom-button"
+    >
+      {{ loading ? 'Registrando...' : 'Registrarse' }}
+    </ion-button>
+
+    <div class="register-link">
+      <a routerLink="/login">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  </form>
+</ion-content>
